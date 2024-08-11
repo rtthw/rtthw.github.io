@@ -94,16 +94,6 @@ __exports.main = function() {
     wasm.main();
 };
 
-/**
-* @param {number} a
-* @param {number} b
-* @returns {number}
-*/
-__exports.add = function(a, b) {
-    const ret = wasm.add(a, b);
-    return ret >>> 0;
-};
-
 function isLikeNone(x) {
     return x === undefined || x === null;
 }

@@ -2,39 +2,18 @@
 <html>
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <style>
-      * {
-        font-family: Verdana, sans-serif;
-        font-size: 17px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <a id="test-anchor" href="test.html">(A) Go to test...</a>
-    <button id="test-button">(B) Go to test...</button>
-    <a id="other-anchor" href="other/">(A) Go to other test...</a>
-    <script src='rtthw.js'></script>
 
-    <script>
-      // Like with the `--target web` output the exports are immediately
-      // available but they won't work until we initialize the module. Unlike
-      // `--target web`, however, the globals are all stored on a
-      // `wasm_bindgen` global. The global itself is the initialization
-      // function and then the properties of the global are all the exported
-      // functions.
-      //
-      // Note that the name `wasm_bindgen` can be configured with the
-      // `--no-modules-global` CLI flag
-      const { add } = wasm_bindgen;
+    <main>
+      <div class="width-limiter">
+        <a id="test-anchor" href="test.html">(A) Go to test...</a>
+        <button id="test-button">(B) Go to test...</button>
+        <a id="other-anchor" href="other/">(A) Go to other test...</a>
+        <script src='rtthw.js'></script>
+      </div>
+    </main>
 
-      async function run() {
-        await wasm_bindgen();
-
-        const result = add(1, 2);
-        console.log(`1 + 2 = ${result}`);
-      }
-
-      run();
-    </script>
   </body>
 </html>

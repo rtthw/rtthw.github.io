@@ -1,5 +1,4 @@
 
-
 use wasm_bindgen::prelude::*;
 use web_sys::HtmlElement;
 
@@ -35,9 +34,4 @@ fn main() -> Result<(), JsValue> {
 extern "C" {
     #[wasm_bindgen(js_namespace = console)]
     fn log(value: &str);
-}
-
-#[wasm_bindgen]
-pub fn add(a: u32, b: u32) -> u32 {
-    a + b
 }

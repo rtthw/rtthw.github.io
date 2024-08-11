@@ -1,0 +1,11 @@
+
+* {
+    font-family: Verdana, sans-serif;
+    font-size: 17px;
+    box-sizing: border-box;
+}
+
+.width-limiter {
+    max-width: 960px;
+    margin-right: auto;
+}

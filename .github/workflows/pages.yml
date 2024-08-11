@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write # for committing to gh-pages branch.
+  contents: write # for committing to `gh-pages` branch.
   pages: write
   id-token: write
 
@@ -39,9 +39,9 @@ jobs:
           version: 'latest'
 
       - name: Build with Trunk
-        run: trunk build --release --public-url "rtthw.github.io"
+        run: trunk build --release --public-url "https://rtthw.github.io"
 
-      # Deploy to gh-pages branch
+      # Deploy to `gh-pages` branch
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:

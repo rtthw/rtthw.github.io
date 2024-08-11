@@ -18,6 +18,13 @@
       <button id="sidenav-open" style="cursor:pointer">&#9776;</button>
     </div>
 
-    <script src='rtthw.js'></script>
+    <script src='../rtthw.js'></script>
+    <script>
+      async function run() {
+        await wasm_bindgen();
+      }
+
+      run();
+    </script>
   </body>
 </html>

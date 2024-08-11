@@ -35,11 +35,11 @@ extern "C" {
 
 fn setup_sidenav(doc: &Document) -> Result<(), JsValue> {
     fn open_sidenav(sidenav: &Element) {
-        let _ = sidenav.set_attribute("style", "width=0");
+        let _ = sidenav.set_attribute("style", "width=250");
     }
 
     fn close_sidenav(sidenav: &Element) {
-        let _ = sidenav.set_attribute("style", "width=250");
+        let _ = sidenav.set_attribute("style", "width=0");
     }
 
     let sidenav_a = doc

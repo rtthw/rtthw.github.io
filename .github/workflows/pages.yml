@@ -39,7 +39,7 @@ jobs:
           version: 'latest'
 
       - name: Build with Trunk
-        run: ./trunk build --release --public-url "rtthw.github.io"
+        run: trunk build --release --public-url "rtthw.github.io"
 
       # Deploy to gh-pages branch
       - name: Deploy 🚀

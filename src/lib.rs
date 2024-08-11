@@ -41,7 +41,7 @@ fn setup_sidenav(doc: &Document) -> Result<(), JsValue> {
             let sidenav = document
                 .get_element_by_id("sidenav")
                 .expect("sidenav should exist");
-            let _ = sidenav.set_attribute("style", "width:250");
+            let _ = sidenav.set_attribute("style", "width:'250px'");
         });
         doc
             .get_element_by_id("sidenav-open")
@@ -58,7 +58,7 @@ fn setup_sidenav(doc: &Document) -> Result<(), JsValue> {
             let sidenav = document
                 .get_element_by_id("sidenav")
                 .expect("sidenav should exist");
-            let _ = sidenav.set_attribute("style", "width:0");
+            let _ = sidenav.set_attribute("style", "width:'0px'");
         });
         doc
             .get_element_by_id("sidenav-close")

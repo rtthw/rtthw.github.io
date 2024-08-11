@@ -5,19 +5,15 @@ edition = "2021"
 
 
 
-[lib]
-crate-type = ["cdylib"]
-
-
-
 [dependencies]
-wasm-bindgen = "0.2.92"
-web-sys = { version = "0.3.4", features = [
-  "AddEventListenerOptions",
-  "Document",
-  "Element",
-  "EventTarget",
-  "HtmlElement",
-  "Node",
-  "Window",
-] }
+leptos = { version = "0.6.13", features = ["csr"] }
+leptos_meta = { version = "0.6.13", features = ["csr"] }
+leptos_router = { version = "0.6.13", features = ["csr"] }
+
+
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = "abort"

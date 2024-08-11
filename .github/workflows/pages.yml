@@ -1,15 +1,12 @@
-name: Deploy to Pages
+name: Release to Github Pages
 
 on:
   push:
-    branches: ["master"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [master]
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
+  contents: write # for committing to gh-pages branch.
   pages: write
   id-token: write
 
@@ -20,20 +17,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  Github-Pages-Release:
+
+    timeout-minutes: 10
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # repo checkout
+
+      # Install Rust Nightly Toolchain
+      - name: Install nightly Rust
+        uses: dtolnay/rust-toolchain@nightly
+
+      - name: Add WASM target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Download and install Trunk binary
+        run: wget -qO- https://github.com/trunk-rs/trunk/releases/download/v0.18.4/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
+
+      - name: Build with Trunk
+        run: ./trunk build --release --public-url "${GITHUB_REPOSITORY#*/}"
+
+
+      # Deploy to gh-pages branch
+      # - name: Deploy 🚀
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     folder: dist
+
+
+      # Deploy with Github Static Pages
+
       - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/configure-pages@v4
         with:
-          path: 'docs'
-      - name: Deploy to GitHub Pages
+          enablement: true
+          # token:
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload dist dir
+          path: './dist'
+
+      - name: Deploy to GitHub Pages 🚀
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v3

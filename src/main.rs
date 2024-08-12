@@ -26,11 +26,10 @@ pub fn app() -> impl IntoView {
             <main class="container">
                 <SideNav/>
                 <Routes>
-                    <Route path="" view=Home/>
-                    <Route path="blog" view=Blog/>
-                    // <Route path="blog/:id" view=Post/>
-                    <Route path="about" view=About/>
-                    <Route path="*" view=PageNotFound/>
+                    <Route path="/blog" view=Blog/>
+                    // <Route path="#blog/:id" view=Post/>
+                    <Route path="/about" view=About/>
+                    <Route path="*" view=Home/>
                 </Routes>
             </main>
 
@@ -73,8 +72,8 @@ pub fn side_nav() -> impl IntoView {
                 X
             </button>
             <A exact=true href="/">"Home"</A>
-            <A href="blog">"Blog"</A>
-            <A href="about">"About"</A>
+            <A href="/blog">"Blog"</A>
+            <A href="/about">"About"</A>
         </div>
     }
 }

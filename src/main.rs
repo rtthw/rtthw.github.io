@@ -29,7 +29,7 @@ pub fn app() -> impl IntoView {
                     <Route path="/blog" view=Blog/>
                     // <Route path="#blog/:id" view=Post/>
                     <Route path="/about" view=About/>
-                    <Route path="*" view=Home/>
+                    <Route path="*" view=PageNotFound/>
                 </Routes>
             </main>
 
@@ -109,6 +109,6 @@ pub fn about() -> impl IntoView {
 #[component]
 pub fn page_not_found() -> impl IntoView {
     view! {
-        <p>Oops!</p>
+        <Redirect path="/"/>
     }
 }

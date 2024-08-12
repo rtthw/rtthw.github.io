@@ -7,7 +7,6 @@
 
 #sidenav {
     height: 100%;
-    width: 0;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -32,11 +31,18 @@
     font-size: 25px;
     color: #bcbec4;
     display: block;
-    transition: 0.3s;
+    transition: 0.1s;
 }
 
 #sidenav a:hover {
     color: #8eb7e6;
+}
+
+.sidenav_hidden {
+    width: 0px;
+}
+.sidenav_shown {
+    width: 250px;
 }
 
 .main {

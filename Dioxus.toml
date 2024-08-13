@@ -1,0 +1,13 @@
+[application]
+name = "rtthw"
+out_dir = "docs"
+
+
+
+[web.app]
+base_path = "https://rtthw.github.io"
+
+
+
+[web.watcher]
+index_on_404 = true

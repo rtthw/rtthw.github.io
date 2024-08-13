@@ -6,14 +6,4 @@ edition = "2021"
 
 
 [dependencies]
-leptos = { version = "0.6.13", features = ["csr"] }
-leptos_meta = { version = "0.6.13", features = ["csr"] }
-leptos_router = { version = "0.6.13", features = ["csr"] }
-
-
-
-[profile.release]
-opt-level = 'z'
-lto = true
-codegen-units = 1
-panic = "abort"
+dioxus = { version = "0.5.1", features = ["web", "router"] }

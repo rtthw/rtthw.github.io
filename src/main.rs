@@ -19,6 +19,8 @@ fn app() -> Element {
 enum Route {
     #[route("/")]
     Home {},
+    #[route("/blog")]
+    Blog {},
     // PageNotFound is a catch all route that will match any route and placing the matched segments in the route field
     #[route("/:..route")]
     PageNotFound { route: Vec<String> },
@@ -29,6 +31,11 @@ enum Route {
 #[component]
 fn Home() -> Element {
     rsx! { h1 { "Home" } }
+}
+
+#[component]
+fn Blog() -> Element {
+    rsx! { h1 { "Blog" } }
 }
 
 #[component]

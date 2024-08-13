@@ -17,15 +17,46 @@ fn app() -> Element {
 
 #[derive(Routable, Clone)]
 enum Route {
-    #[route("/")]
-    Home {},
-    #[route("/blog")]
-    Blog {},
-    // PageNotFound is a catch all route that will match any route and placing the matched segments in the route field
+    #[layout(NavBar)]
+        #[route("/")]
+        Home {},
+        #[nest("/blog")]
+            #[layout(BlogIndex)]
+                #[route("/")]
+                Blog {},
+                #[route("/post/:name")]
+                Post { name: String },
+            #[end_layout]
+        #[end_nest]
+    #[end_layout]
     #[route("/:..route")]
     PageNotFound { route: Vec<String> },
 }
 
+#[component]
+fn NavBar() -> Element {
+    rsx! {
+        nav {
+            ul {
+                li {
+                    Link { to: Route::Home {}, "Home" }
+                }
+                li {
+                    Link { to: Route::Blog {}, "Blog" }
+                }
+            }
+        }
+        Outlet::<Route> {}
+    }
+}
+
+#[component]
+fn BlogIndex() -> Element {
+    rsx! {
+        h1 { "Blog" }
+        Outlet::<Route> {}
+    }
+}
 
 
 #[component]
@@ -35,7 +66,32 @@ fn Home() -> Element {
 
 #[component]
 fn Blog() -> Element {
-    rsx! { h1 { "Blog" } }
+    rsx! {
+        h2 { "Choose a post" }
+        ul {
+            li {
+                Link {
+                    to: Route::Post {
+                        name: "Blog post 1".into(),
+                    },
+                    "Read the first blog post"
+                }
+            }
+            li {
+                Link {
+                    to: Route::Post {
+                        name: "Blog post 2".into(),
+                    },
+                    "Read the second blog post"
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn Post(name: String) -> Element {
+    rsx! { h2 { "Blog Post: {name}" } }
 }
 
 #[component]

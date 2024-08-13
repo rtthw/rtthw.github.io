@@ -12,7 +12,7 @@ base_path = "."
 
 
 [web.watcher]
-index_on_404 = true
+# index_on_404 = true
 
 
 

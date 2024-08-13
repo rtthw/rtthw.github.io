@@ -27,9 +27,9 @@ jobs:
       - name: Install CLI
         run: cargo binstall dioxus-cli -y --force
       - name: Build
-        run: dx build --release --features web
+        run: dx build --release
       - name: Build Static HTML
-        run: cargo run --release --features prebuild
+        run: cargo run --release
       - name: Create 404.html
         run: cp docs/index.html docs/404.html
       - name: Rebuild with search index

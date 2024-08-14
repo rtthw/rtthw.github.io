@@ -9,19 +9,17 @@ fn main() {
     launch(app);
 }
 
-fn app() -> Element {
-    rsx! { Router::<Route> {} }
-}
+fn app() -> Element { rsx! { Router::<Route> {} } }
 
 
 
 #[derive(Routable, Clone)]
 enum Route {
-    #[layout(NavBar)]
+    #[layout(MainLayout)]
         #[route("/")]
         Home {},
         #[nest("/blog")]
-            #[layout(BlogIndex)]
+            #[layout(BlogLayout)]
                 #[route("/")]
                 Blog {},
                 #[route("/post/:name")]
@@ -34,27 +32,76 @@ enum Route {
 }
 
 #[component]
-fn NavBar() -> Element {
+fn MainLayout() -> Element {
+    let mut nav_display = use_signal(|| "none");
+
     rsx! {
-        nav {
-            ul {
-                li {
-                    Link { to: Route::Home {}, "Home" }
+        div {
+            class: "w3-sidebar w3-bar-block w3-margin w3-animate-left",
+            display: nav_display,
+            z_index: "5",
+
+            div {
+                class: "w3-container w3-card",
+
+                h1 { "rtthw" },
+
+                Link { to: Route::Home {}, "Home" },
+                Link { to: Route::Blog {}, "Blog" },
+            }
+        }
+
+        div {
+            class: "w3-overlay w3-animate-opacity",
+            display: nav_display,
+            cursor: "pointer",
+            onmousedown: move |_| nav_display.set("none"),
+        }
+
+        div {
+            class: "w3-top",
+
+            div {
+                class: "w3-bar w3-theme-d2 w3-left-align w3-large",
+
+                a {
+                    class: "w3-bar-item w3-button w3-padding-large w3-hover-white w3-large w3-theme-d2",
+                    onmousedown: move |_| nav_display.set("block"),
+
+                    i { class: "fa fa-bars" }
                 }
-                li {
-                    Link { to: Route::Blog {}, "Blog" }
+
+                Link {
+                    class: "w3-bar-item w3-button w3-padding-large w3-theme-d4",
+                    to: Route::Home {}, 
+                    i { class: "fa fa-home w3-margin-right" },
+
+                    "Home"
                 }
             }
         }
-        Outlet::<Route> {}
+
+        div {
+            class: "w3-content",
+            margin_top: "70px",
+
+            Outlet::<Route> {}
+        }
     }
 }
 
 #[component]
-fn BlogIndex() -> Element {
+fn BlogLayout() -> Element {
     rsx! {
-        h1 { "Blog" }
-        Outlet::<Route> {}
+        div {
+            class: "w3-content w3-margin", 
+
+            div {
+                class: "w3-container w3-card w3-white w3-margin",
+
+                Outlet::<Route> {}
+            }
+        }
     }
 }
 

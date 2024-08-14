@@ -5,21 +5,26 @@
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8" />
+  <link rel="stylesheet" href="/style-f5b9393bf8108563.css" integrity="sha384&#x2D;HH&#x2B;MK7&#x2B;ZK&#x2B;&#x2B;ENOsn9Nqlv4vTudMfo6wI7phjhpiH1rrs0qIoP3gOn&#x2F;&#x2B;1KEWIr9mu"/>
   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
 
-<link rel="modulepreload" href="/rtthw-c3c4be7e84a676c8.js" crossorigin=anonymous integrity="sha384-NPyGMQP4lsfUv+5kriCFIyEsjtDz0D0ENzgb56PeULv/XlmIg9RDloLURUWX+i0Y">
-<link rel="modulepreload" href="/snippets/dioxus-web-10186f9fcc0b4418/inline0.js" crossorigin=anonymous integrity="sha384-xqSmg18C2FmchYWi9fb4cSqOW4ZNNo4b7NWZK1eW+fOqg4no+2F+zETwKUf1PJy3">
+
+<link rel="modulepreload" href="/rtthw-bdf81a902c37e048.js" crossorigin=anonymous integrity="sha384-FiagSaUSFKWMR3xXMGSSQzVo+cI7ADDhVxuwUEtqC8Fws8MKK9hWwQlE5/OvFcr4">
 <link rel="modulepreload" href="/snippets/dioxus-interpreter-js-7e2aed97ebee2c55/src/js/eval.js" crossorigin=anonymous integrity="sha384-ks/r+y1kY4du0z2hvNElbl2lGiYIMKyoewBMNJVdOl1CNoiOC+EC5U+GTT5bdpZ9">
+<link rel="modulepreload" href="/snippets/dioxus-interpreter-js-7e2aed97ebee2c55/inline0.js" crossorigin=anonymous integrity="sha384-ghEgM0sbg8ee7UUr/rmcbYqUN37qA8ilggkPcBkyRK/95b8rGEA7/p+j+xprksDw">
 <link rel="modulepreload" href="/snippets/dioxus-web-10186f9fcc0b4418/inline1.js" crossorigin=anonymous integrity="sha384-2v8X0XAeO26J0vmoLhIbIeAjVzFnrY9iLhlYJcksTMp7Ip2tbDcoX4vD/hCan7M7">
 <link rel="modulepreload" href="/snippets/dioxus-interpreter-js-7e2aed97ebee2c55/src/js/common.js" crossorigin=anonymous integrity="sha384-lNXbLTw7Z18z5HtM0HV3R7/8J+II5Ei18I53QeIZolR+l1nGEBr27UjMtT/DJpiC">
-<link rel="modulepreload" href="/snippets/dioxus-interpreter-js-7e2aed97ebee2c55/inline0.js" crossorigin=anonymous integrity="sha384-ghEgM0sbg8ee7UUr/rmcbYqUN37qA8ilggkPcBkyRK/95b8rGEA7/p+j+xprksDw">
-<link rel="preload" href="/rtthw-c3c4be7e84a676c8_bg.wasm" crossorigin=anonymous integrity="sha384-wrnMsSbKSmK9Y7t7srkuMRbWXA+MKSno4zgY9Kwl9yfcTJQeEtG+5uJU1sucrlfM" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="/snippets/dioxus-web-10186f9fcc0b4418/inline0.js" crossorigin=anonymous integrity="sha384-xqSmg18C2FmchYWi9fb4cSqOW4ZNNo4b7NWZK1eW+fOqg4no+2F+zETwKUf1PJy3">
+<link rel="preload" href="/rtthw-bdf81a902c37e048_bg.wasm" crossorigin=anonymous integrity="sha384-UqeGPM1SNixMEKzEbHVr658g4emg/mwn9LoCKaBebMzuMwdDAyvufz5f/zKtFbCj" as="fetch" type="application/wasm"></head>
 <body>
   <div id="main"></div>
 
-<script type="module" nonce="vsDyH45DY+nB1WkPNoPEEg==">
-import init, * as bindings from '/rtthw-c3c4be7e84a676c8.js';
-const wasm = await init('/rtthw-c3c4be7e84a676c8_bg.wasm');
+<script type="module" nonce="n4S5ND8ilZ0yxfTYpXDtFQ==">
+import init, * as bindings from '/rtthw-bdf81a902c37e048.js';
+const wasm = await init('/rtthw-bdf81a902c37e048_bg.wasm');
 
 
 window.wasmBindings = bindings;
@@ -27,5 +32,134 @@ window.wasmBindings = bindings;
 
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
+</script><script>"use strict";
+
+(function () {
+
+    const address = '{{__TRUNK_ADDRESS__}}';
+    const base = '{{__TRUNK_WS_BASE__}}';
+    let protocol = '';
+    protocol =
+        protocol
+            ? protocol
+            : window.location.protocol === 'https:'
+                ? 'wss'
+                : 'ws';
+    const url = protocol + '://' + address + base + '.well-known/trunk/ws';
+
+    class Overlay {
+        constructor() {
+            // create an overlay
+            this._overlay = document.createElement("div");
+            const style = this._overlay.style;
+            style.height = "100vh";
+            style.width = "100vw";
+            style.position = "fixed";
+            style.top = "0";
+            style.left = "0";
+            style.backgroundColor = "rgba(222, 222, 222, 0.5)";
+            style.fontFamily = "sans-serif";
+            // not sure that's the right approach
+            style.zIndex = "1000000";
+            style.backdropFilter = "blur(1rem)";
+
+            const container = document.createElement("div");
+            // center it
+            container.style.position = "absolute";
+            container.style.top = "30%";
+            container.style.left = "15%";
+            container.style.maxWidth = "85%";
+
+            this._title = document.createElement("div");
+            this._title.innerText = "Build failure";
+            this._title.style.paddingBottom = "2rem";
+            this._title.style.fontSize = "2.5rem";
+
+            this._message = document.createElement("div");
+            this._message.style.whiteSpace = "pre-wrap";
+
+            const icon= document.createElement("div");
+            icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#dc3545" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>';
+            this._title.prepend(icon);
+
+            container.append(this._title, this._message);
+            this._overlay.append(container);
+
+            this._inject();
+            window.setInterval(() => {
+                this._inject();
+            }, 250);
+        }
+
+        set reason(reason) {
+            this._message.textContent = reason;
+        }
+
+        _inject() {
+            if (!this._overlay.isConnected) {
+                // prepend it
+                document.body?.prepend(this._overlay);
+            }
+        }
+
+    }
+
+    class Client {
+        constructor(url) {
+            this.url = url;
+            this.poll_interval = 5000;
+            this._overlay = null;
+        }
+
+        start() {
+            const ws = new WebSocket(this.url);
+            ws.onmessage = (ev) => {
+                const msg = JSON.parse(ev.data);
+                switch (msg.type) {
+                    case "reload":
+                        this.reload();
+                        break;
+                    case "buildFailure":
+                        this.buildFailure(msg.data)
+                        break;
+                }
+            };
+            ws.onclose = this.onclose;
+        }
+
+        onclose() {
+            window.setTimeout(
+                () => {
+                    // when we successfully reconnect, we'll force a
+                    // reload (since we presumably lost connection to
+                    // trunk due to it being killed, so it will have
+                    // rebuilt on restart)
+                    const ws = new WebSocket(this.url);
+                    ws.onopen = () => window.location.reload();
+                    ws.onclose = this.onclose;
+                },
+                this.poll_interval);
+        }
+
+        reload() {
+            window.location.reload();
+        }
+
+        buildFailure({reason}) {
+            // also log the console
+            console.error("Build failed:", reason);
+
+            console.debug("Overlay", this._overlay);
+
+            if (!this._overlay) {
+                this._overlay = new Overlay();
+            }
+            this._overlay.reason = reason;
+        }
+    }
+
+    new Client(url).start();
+
+})()
 </script></body>
 </html>

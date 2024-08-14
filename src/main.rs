@@ -4,6 +4,8 @@
 use dioxus::prelude::*;
 
 
+pub const RAW_CONTENT_URL: &str = "https://raw.githubusercontent.com/rtthw/rtthw.github.io/master/src/data/";
+
 
 fn main() {
     launch(app);
@@ -196,7 +198,7 @@ fn ProjectsLayout() -> Element {
 fn Projects() -> Element {
     rsx! {
         h1 { "Projects" }
-        
+
         h3 { "Applications" }
         ul {
             li {
@@ -226,7 +228,44 @@ fn Projects() -> Element {
 
 #[component]
 fn Project(name: String) -> Element {
-    rsx! { h1 { class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey", "{name}" } }
+    let url = format!("https://raw.githubusercontent.com/rtthw/data/master/site-data/{}.md", &name);
+    let mut future = use_resource(move || {
+        let value = url.clone();
+        async move {
+            reqwest::get(value)
+                .await
+                .unwrap()
+                .bytes()
+                .await
+        }
+    });
+
+    match &*future.read_unchecked() {
+        Some(Ok(response)) => {
+            let content = String::from_utf8(response.to_vec()).unwrap();
+            rsx! {
+                h1 { class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey", "{name}" }
+
+                div {
+                    class: "container is-fluid",
+                    Markdown {
+                        content: content,
+                    }
+                }
+            }
+        }
+        Some(Err(_)) => rsx! {
+            div { "Loading page failed" }
+            a {
+                class: "w3-button w3-right w3-hover-white w3-theme",
+                title: "Retry Fetch",
+                onmousedown: move |_| future.restart(),
+
+                i { class: "fa fa-refresh" }
+            }
+        },
+        None => rsx! { div { "Loading page..." } },
+    }
 }
 
 #[component]
@@ -235,5 +274,39 @@ fn PageNotFound(route: Vec<String>) -> Element {
         h1 { "Page not found" }
         p { "The page you requested doesn't exist." }
         pre { color: "red", "log:\nattemped to navigate to: {route:?}" }
+    }
+}
+
+
+
+// ================================================================================================
+
+
+
+#[derive(Props, Clone, PartialEq)]
+pub struct MarkdownProps {
+    #[props(default)]
+    id: Signal<String>,
+    #[props(default)]
+    class: Signal<String>,
+
+    content: ReadOnlySignal<String>,
+}
+
+/// Render some text as markdown.
+#[component]
+pub fn Markdown(props: MarkdownProps) -> Element {
+    let content = &*props.content.read();
+    let parser = pulldown_cmark::Parser::new(content);
+
+    let mut html_buf = String::new();
+    pulldown_cmark::html::push_html(&mut html_buf, parser);
+
+    rsx! {
+        div {
+            id: "{&*props.id.read()}",
+            class: "{&*props.class.read()}",
+            dangerous_inner_html: "{html_buf}"
+        }
     }
 }

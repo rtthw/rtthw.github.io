@@ -1,5 +1,0 @@
-
-
-# Something
-
-This is something...

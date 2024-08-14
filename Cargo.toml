@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 dioxus = { version = "0.5", features = ["web", "router"] }
+pulldown-cmark = "0.11.0"
+reqwest = "0.12.5"

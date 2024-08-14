@@ -4,8 +4,6 @@
 use dioxus::prelude::*;
 
 
-pub const RAW_CONTENT_URL: &str = "https://raw.githubusercontent.com/rtthw/rtthw.github.io/master/src/data/";
-
 
 fn main() {
     launch(app);

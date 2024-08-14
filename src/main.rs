@@ -18,6 +18,14 @@ enum Route {
     #[layout(MainLayout)]
         #[route("/")]
         Home {},
+        #[nest("/projects")]
+            #[layout(ProjectsLayout)]
+                #[route("/")]
+                Projects {},
+                #[route("/:name")]
+                Project { name: String },
+            #[end_layout]
+        #[end_nest]
         #[nest("/blog")]
             #[layout(BlogLayout)]
                 #[route("/")]
@@ -37,17 +45,43 @@ fn MainLayout() -> Element {
 
     rsx! {
         div {
-            class: "w3-sidebar w3-bar-block w3-margin w3-animate-left",
+            class: "w3-sidebar w3-margin w3-animate-left w3-transparent",
             display: nav_display,
             z_index: "5",
 
             div {
-                class: "w3-container w3-card",
+                class: "w3-card w3-round w3-white",
 
-                h1 { "rtthw" },
+                div {
+                    class: "w3-container w3-padding",
+                    
+                    h1 { class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey", "rtthw" },
+    
+                    Link {
+                        class: "w3-xlarge", 
+                        to: Route::Home {}, 
+                        onclick: move |_| nav_display.set("none"),
 
-                Link { to: Route::Home {}, "Home" },
-                Link { to: Route::Blog {}, "Blog" },
+                        "Home" 
+                    },
+                    br {}
+                    Link {
+                        class: "w3-xlarge", 
+                        to: Route::Projects {}, 
+                        onclick: move |_| nav_display.set("none"),
+
+                        "Projects"
+                    },
+                    br {}
+                    Link {
+                        class: "w3-xlarge", 
+                        to: Route::Blog {}, 
+                        onclick: move |_| nav_display.set("none"),
+
+                        "Blog"
+                    },
+                    br {}
+                }
             }
         }
 
@@ -90,25 +124,27 @@ fn MainLayout() -> Element {
     }
 }
 
+
+#[component]
+fn Home() -> Element {
+    rsx! { h1 { "Home" } }
+}
+
 #[component]
 fn BlogLayout() -> Element {
     rsx! {
+        h1 { "Blog" }
+
         div {
-            class: "w3-content w3-margin", 
+            class: "w3-card w3-white w3-round w3-margin",
 
             div {
-                class: "w3-container w3-card w3-white w3-margin",
+                class: "w3-container",
 
                 Outlet::<Route> {}
             }
         }
     }
-}
-
-
-#[component]
-fn Home() -> Element {
-    rsx! { h1 { "Home" } }
 }
 
 #[component]
@@ -139,6 +175,58 @@ fn Blog() -> Element {
 #[component]
 fn Post(name: String) -> Element {
     rsx! { h2 { "Blog Post: {name}" } }
+}
+
+#[component]
+fn ProjectsLayout() -> Element {
+    rsx! {
+        div {
+            class: "w3-card w3-white w3-round w3-margin",
+
+            div {
+                class: "w3-container",
+
+                Outlet::<Route> {}
+            }
+        }
+    }
+}
+
+#[component]
+fn Projects() -> Element {
+    rsx! {
+        h1 { "Projects" }
+        
+        h3 { "Applications" }
+        ul {
+            li {
+                Link {
+                    class: "w3-xlarge", 
+                    to: Route::Project {
+                        name: "error".into(),
+                    },
+                    "UNNAMED: A terminal file manager"
+                }
+            }
+        }
+        h3 { "Development Tools" }
+        ul {
+            li {
+                Link {
+                    class: "w3-xlarge", 
+                    to: Route::Project {
+                        name: "dreg".into(),
+                    },
+                    "Dreg: A simple TUI library written in Rust"
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn Project(name: String) -> Element {
+    rsx! { h1 { class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey", "{name}" } }
 }
 
 #[component]

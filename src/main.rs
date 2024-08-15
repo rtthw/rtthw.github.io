@@ -27,12 +27,10 @@ enum Route {
         #[route("/about")]
         About {},
         #[nest("/projects")]
-            #[layout(ProjectsLayout)]
-                #[route("/")]
-                Projects {},
-                #[route("/:name")]
-                Project { name: String },
-            #[end_layout]
+            #[route("/")]
+            Projects {},
+            #[route("/:..route")]
+            Project { route: Vec<String> },
         #[end_nest]
         #[nest("/blog")]
             #[layout(BlogLayout)]
@@ -46,8 +44,8 @@ enum Route {
             #[layout(WikiLayout)]
                 #[route("/")]
                 Wiki {},
-                #[route("/:name")]
-                Article { name: String },
+                #[route("/:..route")]
+                Article { route: Vec<String> },
             #[end_layout]
         #[end_nest]
     #[end_layout]
@@ -230,21 +228,6 @@ fn Post(name: String) -> Element {
 }
 
 #[component]
-fn ProjectsLayout() -> Element {
-    rsx! {
-        div {
-            class: "w3-card w3-white w3-round w3-margin",
-
-            div {
-                class: "w3-container",
-
-                Outlet::<Route> {}
-            }
-        }
-    }
-}
-
-#[component]
 fn Projects() -> Element {
     rsx! {
         h1 { "Projects" }
@@ -255,7 +238,7 @@ fn Projects() -> Element {
                 Link {
                     class: "w3-xlarge", 
                     to: Route::Project {
-                        name: "error".into(),
+                        route: vec!["error".into()],
                     },
                     "UNNAMED: A terminal file manager"
                 }
@@ -267,7 +250,7 @@ fn Projects() -> Element {
                 Link {
                     class: "w3-xlarge", 
                     to: Route::Project {
-                        name: "dreg".into(),
+                        route: vec!["dreg".into()],
                     },
                     "Dreg: A simple TUI library written in Rust"
                 }
@@ -277,8 +260,10 @@ fn Projects() -> Element {
 }
 
 #[component]
-fn Project(name: String) -> Element {
-    let url = format!("{RAW_SITE_DATA_URL}/projects/{}.md", &name);
+fn Project(route: Vec<String>) -> Element {
+    let route_info = resolve_route_info("projects", &route);
+
+    let url = route_info.url.clone();
     let mut future = use_resource(move || {
         let value = url.clone();
         async move {
@@ -290,27 +275,36 @@ fn Project(name: String) -> Element {
         }
     });
 
+
     match &*future.read_unchecked() {
         Some(Ok(response)) => {
             let content = String::from_utf8(response.to_vec()).unwrap();
             rsx! {
-                h1 { class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey", "{name}" }
+                h1 {
+                    class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey",
+                    "{route_info.real_name}"
+                }
 
                 div {
-                    class: "container is-fluid",
-                    Markdown {
-                        content: content,
+                    class: "w3-card w3-white w3-round w3-margin",
+        
+                    div {
+                        class: "w3-container",
+        
+                        Markdown {
+                            content: content,
+                        }
                     }
                 }
             }
         }
         Some(Err(_)) => rsx! {
-            div { "Loading page failed" }
+            h3 { "Loading failed" }
             a {
                 class: "w3-button w3-right w3-hover-white w3-theme",
                 title: "Retry Fetch",
                 onmousedown: move |_| future.restart(),
-
+    
                 i { class: "fa fa-refresh" }
             }
         },
@@ -341,8 +335,10 @@ fn Wiki() -> Element {
 }
 
 #[component]
-fn Article(name: String) -> Element {
-    let url = format!("{RAW_SITE_DATA_URL}/wiki/{}.md", &name);
+fn Article(route: Vec<String>) -> Element {
+    let route_info = resolve_route_info("wiki", &route);
+
+    let url = route_info.url.clone();
     let mut future = use_resource(move || {
         let value = url.clone();
         async move {
@@ -358,7 +354,10 @@ fn Article(name: String) -> Element {
         Some(Ok(response)) => {
             let content = String::from_utf8(response.to_vec()).unwrap();
             rsx! {
-                h1 { class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey", "{name}" }
+                h1 {
+                    class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey",
+                    "{route_info.real_name}"
+                }
 
                 div {
                     class: "container is-fluid",
@@ -391,6 +390,39 @@ fn PageNotFound(route: Vec<String>) -> Element {
     }
 }
 
+
+pub struct RouteInfo {
+    pub name: String,
+    pub real_name: String,
+    pub url: String,
+}
+
+fn resolve_route_info(prefix: &str, route: &Vec<String>) -> RouteInfo {
+    let name = route.last().cloned().unwrap_or(String::new());
+    let file_name = if name.ends_with(".md") {
+        name.clone()
+    } else {
+        format!("{name}.md")
+    };
+    let url = if route.len() > 1 {
+        let path_before_name = route.iter().cloned()
+            .take(route.len() - 1)
+            .fold(String::new(), |mut acc, seg| {
+                acc.push_str(&format!("{seg}/"));
+                acc
+            });
+        format!("{RAW_SITE_DATA_URL}/{prefix}/{}{}", path_before_name, &file_name)
+    } else {
+        format!("{RAW_SITE_DATA_URL}/{prefix}/{}", &file_name)
+    };
+    let real_name = name.strip_suffix(".md").unwrap_or(&name).to_string();
+
+    RouteInfo {
+        name,
+        real_name,
+        url,
+    }
+}
 
 
 // ================================================================================================

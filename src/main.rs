@@ -5,19 +5,27 @@ use dioxus::prelude::*;
 
 
 
+const RAW_SITE_DATA_URL: &str = "https://raw.githubusercontent.com/rtthw/data/master/site-data";
+
+
+
+// ================================================================================================
+
+
+
 fn main() {
     launch(app);
 }
 
 fn app() -> Element { rsx! { Router::<Route> {} } }
 
-
-
 #[derive(Routable, Clone)]
 enum Route {
     #[layout(MainLayout)]
         #[route("/")]
         Home {},
+        #[route("/about")]
+        About {},
         #[nest("/projects")]
             #[layout(ProjectsLayout)]
                 #[route("/")]
@@ -34,6 +42,14 @@ enum Route {
                 Post { name: String },
             #[end_layout]
         #[end_nest]
+        #[nest("/wiki")]
+            #[layout(WikiLayout)]
+                #[route("/")]
+                Wiki {},
+                #[route("/:name")]
+                Article { name: String },
+            #[end_layout]
+        #[end_nest]
     #[end_layout]
     #[route("/:..route")]
     PageNotFound { route: Vec<String> },
@@ -44,6 +60,7 @@ fn MainLayout() -> Element {
     let mut nav_display = use_signal(|| "none");
 
     rsx! {
+        // Side bar.
         div {
             class: "w3-sidebar w3-margin w3-animate-left w3-transparent",
             display: nav_display,
@@ -67,6 +84,21 @@ fn MainLayout() -> Element {
                     br {}
                     Link {
                         class: "w3-xlarge", 
+                        to: Route::About {}, 
+                        onclick: move |_| nav_display.set("none"),
+
+                        "About" 
+                    },
+                }
+            }
+            div {
+                class: "w3-card w3-round w3-white w3-margin-top",
+
+                div {
+                    class: "w3-container w3-padding",
+
+                    Link {
+                        class: "w3-xlarge", 
                         to: Route::Projects {}, 
                         onclick: move |_| nav_display.set("none"),
 
@@ -81,10 +113,18 @@ fn MainLayout() -> Element {
                         "Blog"
                     },
                     br {}
+                    Link {
+                        class: "w3-xlarge", 
+                        to: Route::Wiki {}, 
+                        onclick: move |_| nav_display.set("none"),
+
+                        "Wiki"
+                    },
                 }
             }
         }
 
+        // Opacity overlay.
         div {
             class: "w3-overlay w3-animate-opacity",
             display: nav_display,
@@ -92,6 +132,7 @@ fn MainLayout() -> Element {
             onmousedown: move |_| nav_display.set("none"),
         }
 
+        // Menu bar.
         div {
             class: "w3-top",
 
@@ -115,6 +156,7 @@ fn MainLayout() -> Element {
             }
         }
 
+        // Content.
         div {
             class: "w3-content",
             margin_top: "70px",
@@ -125,9 +167,19 @@ fn MainLayout() -> Element {
 }
 
 
+
+// ================================================================================================
+
+
+
 #[component]
 fn Home() -> Element {
     rsx! { h1 { "Home" } }
+}
+
+#[component]
+fn About() -> Element {
+    rsx! { h1 { "About" } }
 }
 
 #[component]
@@ -226,7 +278,7 @@ fn Projects() -> Element {
 
 #[component]
 fn Project(name: String) -> Element {
-    let url = format!("https://raw.githubusercontent.com/rtthw/data/master/site-data/{}.md", &name);
+    let url = format!("{RAW_SITE_DATA_URL}/projects/{}.md", &name);
     let mut future = use_resource(move || {
         let value = url.clone();
         async move {
@@ -263,6 +315,70 @@ fn Project(name: String) -> Element {
             }
         },
         None => rsx! { div { "Loading page..." } },
+    }
+}
+
+#[component]
+fn WikiLayout() -> Element {
+    rsx! {
+        div {
+            class: "w3-card w3-white w3-round w3-margin",
+
+            div {
+                class: "w3-container",
+
+                Outlet::<Route> {}
+            }
+        }
+    }
+}
+
+#[component]
+fn Wiki() -> Element {
+    rsx! {
+        h1 { "Wiki" }
+    }
+}
+
+#[component]
+fn Article(name: String) -> Element {
+    let url = format!("{RAW_SITE_DATA_URL}/wiki/{}.md", &name);
+    let mut future = use_resource(move || {
+        let value = url.clone();
+        async move {
+            reqwest::get(value)
+                .await
+                .unwrap()
+                .bytes()
+                .await
+        }
+    });
+
+    match &*future.read_unchecked() {
+        Some(Ok(response)) => {
+            let content = String::from_utf8(response.to_vec()).unwrap();
+            rsx! {
+                h1 { class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey", "{name}" }
+
+                div {
+                    class: "container is-fluid",
+                    Markdown {
+                        content: content,
+                    }
+                }
+            }
+        }
+        Some(Err(_)) => rsx! {
+            div { "Loading page failed" }
+            a {
+                class: "w3-button w3-right w3-hover-white w3-theme",
+                title: "Retry Fetch",
+                onmousedown: move |_| future.restart(),
+
+                i { class: "fa fa-refresh" }
+            }
+        },
+        None => rsx! { div { "Loading article..." } },
     }
 }
 

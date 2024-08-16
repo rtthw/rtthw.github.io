@@ -36,8 +36,8 @@ enum Route {
             #[layout(BlogLayout)]
                 #[route("/")]
                 Blog {},
-                #[route("/post/:name")]
-                Post { name: String },
+                #[route("/post/:..route")]
+                Post { route: Vec<String> },
             #[end_layout]
         #[end_nest]
         #[nest("/wiki")]
@@ -205,26 +205,68 @@ fn Blog() -> Element {
             li {
                 Link {
                     to: Route::Post {
-                        name: "Blog post 1".into(),
+                        route: vec!["how-i-made-this-site".into()],
                     },
-                    "Read the first blog post"
+                    "How I Made This Site"
                 }
             }
-            li {
-                Link {
-                    to: Route::Post {
-                        name: "Blog post 2".into(),
-                    },
-                    "Read the second blog post"
-                }
-            }
+            // li {
+            //     Link {
+            //         to: Route::Post {
+            //             route: vec!["Blog post 2".into()],
+            //         },
+            //         "Read the second blog post"
+            //     }
+            // }
         }
     }
 }
 
 #[component]
-fn Post(name: String) -> Element {
-    rsx! { h2 { "Blog Post: {name}" } }
+fn Post(route: Vec<String>) -> Element {
+    let route_info = resolve_route_info("blog", &route);
+
+    let url = route_info.url.clone();
+    let mut future = use_resource(move || {
+        let value = url.clone();
+        async move {
+            reqwest::get(value)
+                .await
+                .unwrap()
+                .bytes()
+                .await
+        }
+    });
+
+    match &*future.read_unchecked() {
+        Some(Ok(response)) => {
+            let content = String::from_utf8(response.to_vec()).unwrap();
+            rsx! {
+                h1 {
+                    class: "w3-xxxlarge w3-center w3-monospace w3-text-blue-grey",
+                    "{route_info.real_name}"
+                }
+
+                div {
+                    class: "container is-fluid",
+                    Markdown {
+                        content: content,
+                    }
+                }
+            }
+        }
+        Some(Err(_)) => rsx! {
+            div { "Loading page failed" }
+            a {
+                class: "w3-button w3-right w3-hover-white w3-theme",
+                title: "Retry Fetch",
+                onmousedown: move |_| future.restart(),
+
+                i { class: "fa fa-refresh" }
+            }
+        },
+        None => rsx! { div { "Loading article..." } },
+    }
 }
 
 #[component]

@@ -1,5 +1,9 @@
 
 
+mod markdown;
+
+
+use std::str::FromStr as _;
 
 use dioxus::prelude::*;
 
@@ -437,6 +441,7 @@ pub struct RouteInfo {
     pub name: String,
     pub real_name: String,
     pub url: String,
+    pub route: Option<Route>,
 }
 
 fn resolve_route_info(prefix: &str, route: &Vec<String>) -> RouteInfo {
@@ -459,42 +464,16 @@ fn resolve_route_info(prefix: &str, route: &Vec<String>) -> RouteInfo {
     };
     let real_name = name.strip_suffix(".md").unwrap_or(&name).to_string();
 
+    let route = Route::from_str(route.join("/").as_str()).ok();
+
     RouteInfo {
         name,
         real_name,
         url,
+        route,
     }
 }
+
 
 
 // ================================================================================================
-
-
-
-#[derive(Props, Clone, PartialEq)]
-pub struct MarkdownProps {
-    #[props(default)]
-    id: Signal<String>,
-    #[props(default)]
-    class: Signal<String>,
-
-    content: ReadOnlySignal<String>,
-}
-
-/// Render some text as markdown.
-#[component]
-pub fn Markdown(props: MarkdownProps) -> Element {
-    let content = &*props.content.read();
-    let parser = pulldown_cmark::Parser::new(content);
-
-    let mut html_buf = String::new();
-    pulldown_cmark::html::push_html(&mut html_buf, parser);
-
-    rsx! {
-        div {
-            id: "{&*props.id.read()}",
-            class: "{&*props.class.read()}",
-            dangerous_inner_html: "{html_buf}"
-        }
-    }
-}

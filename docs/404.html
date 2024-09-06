@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>rtthw</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+<script type="module" nonce="PRcJ1CfB5YhbOOzBVTWYsQ==">
+import init, * as bindings from '/rtthw-973fd8345cae1def.js';
+const wasm = await init('/rtthw-973fd8345cae1def_bg.wasm');
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+    <base href="/test">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body, #canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+
+<link rel="modulepreload" href="/rtthw-973fd8345cae1def.js" crossorigin=anonymous integrity="sha384-Ybe+z6wLyU2PLM2z9Dx38PgTEEwKku80FafNAOSzMu+haVYtSKcy2Wt6TUO4ubTn">
+<link rel="modulepreload" href="/snippets/dioxus-web-10186f9fcc0b4418/inline1.js" crossorigin=anonymous integrity="sha384-2v8X0XAeO26J0vmoLhIbIeAjVzFnrY9iLhlYJcksTMp7Ip2tbDcoX4vD/hCan7M7">
+<link rel="modulepreload" href="/snippets/dioxus-interpreter-js-7e2aed97ebee2c55/src/js/common.js" crossorigin=anonymous integrity="sha384-lNXbLTw7Z18z5HtM0HV3R7/8J+II5Ei18I53QeIZolR+l1nGEBr27UjMtT/DJpiC">
+<link rel="modulepreload" href="/snippets/dioxus-web-10186f9fcc0b4418/inline0.js" crossorigin=anonymous integrity="sha384-xqSmg18C2FmchYWi9fb4cSqOW4ZNNo4b7NWZK1eW+fOqg4no+2F+zETwKUf1PJy3">
+<link rel="modulepreload" href="/snippets/dioxus-interpreter-js-7e2aed97ebee2c55/inline0.js" crossorigin=anonymous integrity="sha384-ExhvMQQXrVOxUWLNPXoAqyYtvb53eYrq5KI+lzKlqVY9pYsyuYRsuG9O0Wsl/Zi1">
+<link rel="modulepreload" href="/snippets/dioxus-interpreter-js-7e2aed97ebee2c55/src/js/eval.js" crossorigin=anonymous integrity="sha384-ks/r+y1kY4du0z2hvNElbl2lGiYIMKyoewBMNJVdOl1CNoiOC+EC5U+GTT5bdpZ9">
+<link rel="preload" href="/rtthw-973fd8345cae1def_bg.wasm" crossorigin=anonymous integrity="sha384-5RcyRwoC2G+QmLr0gTBZZr8TKxex4W5tpa1ElCkec7+XWyAFLhFCt3rDB+uqmCtY" as="fetch" type="application/wasm"></head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+</html>

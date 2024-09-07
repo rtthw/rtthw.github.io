@@ -27,6 +27,7 @@ pub fn setup_router(state: &mut State) -> EguiRouter<State> {
         .transition(TransitionConfig::fade()) // .with_easing(egui_animation::easing::quad_out)
         .default_duration(0.2)
         .route("/", home)
+        .route("/dreg", dreg)
         .route("/post/{id}", post)
         .route("/wiki/{id}", wiki)
         .default_path("/")
@@ -99,6 +100,25 @@ fn wiki(request: Request<State>) -> impl Route<State> {
                 if ui.button("Back").clicked() {
                     state.send_message(Message::GoBack).ok();
                 }
+            }
+        });
+    }
+}
+
+
+
+// ================================================================================================
+
+
+
+// https://rtthw.github.io/dreg
+fn dreg(_request: Request<State>) -> impl Route<State> {
+    move |ui: &mut egui::Ui, state: &mut State| {
+        vscroll().show(ui, |ui| {
+            ui.heading("Dreg");
+            ui.separator();
+            if ui.button("Back").clicked() {
+                state.send_message(Message::GoBack).ok();
             }
         });
     }

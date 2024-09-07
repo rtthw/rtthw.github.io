@@ -3,6 +3,7 @@
 
 mod routing;
 
+use anyhow::Result;
 use eframe::egui::{self, Color32};
 
 
@@ -47,20 +48,18 @@ fn main() {
 struct Website {
     state: State,
     router: egui_router::EguiRouter<State>,
+    msg_recv: std::sync::mpsc::Receiver<Message>,
 }
 
 impl eframe::App for Website {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        if !self.state.messages.is_empty() {
-            let messages: Vec<Message> = self.state.messages.drain(..).collect();
-            for msg in messages {
-                match msg {
-                    Message::GoTo(route) => {
-                        self.router.navigate(&mut self.state, route).ok();
-                    }
-                    Message::GoBack => {
-                        self.router.back().ok();
-                    }
+        while let Ok(msg) = self.msg_recv.try_recv() {
+            match msg {
+                Message::GoTo(route) => {
+                    self.router.navigate(&mut self.state, route).ok();
+                }
+                Message::GoBack => {
+                    self.router.back().ok();
                 }
             }
         }
@@ -82,25 +81,36 @@ impl Website {
         visuals.panel_fill = Color32::from_hex("#1e1f22").unwrap();
         cc.egui_ctx.set_visuals(visuals);
 
-        let mut state = State {
-            messages: vec![],
-        };
+        let (mut state, msg_recv) = State::new();
         let router = routing::setup_router(&mut state);
 
         Self {
             state,
             router,
+            msg_recv,
         }
     }
 }
 
 pub struct State {
-    messages: Vec<Message>,
+    msg_send: std::sync::mpsc::Sender<Message>,
 }
 
 impl State {
-    pub fn send_message(&mut self, msg: Message) {
-        self.messages.push(msg)
+    fn new() -> (Self, std::sync::mpsc::Receiver<Message>) {
+        let (msg_send, msg_recv) = std::sync::mpsc::channel();
+
+        (
+            Self {
+                msg_send,
+            },
+            msg_recv,
+        )
+    }
+
+    pub fn send_message(&self, msg: Message) -> Result<()> {
+        self.msg_send.send(msg)?;
+        Ok(())
     }
 }
 

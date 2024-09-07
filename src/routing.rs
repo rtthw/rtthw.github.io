@@ -9,32 +9,40 @@ use crate::{Message, State};
 
 pub fn setup_router(state: &mut State) -> EguiRouter<State> {
     EguiRouter::builder()
+        .error_ui(|ui, state: &State, error| {
+            ui.label(format!("Error: {}", error));
+            if ui.button("Back").clicked() {
+                state.send_message(Message::GoBack).ok();
+            }
+        })
+        .loading_ui(|ui, _| {
+            ui.label("Loading...");
+            ui.spinner();
+        })
         .transition(TransitionConfig::fade_up()) // .with_easing(egui_animation::easing::quad_out)
         .default_duration(0.2)
         .route("/", home)
         .route("/post/{id}", post)
+        .route("/wiki/{id}", wiki)
         .default_path("/")
         .build(state)
 }
 
 fn home(_request: Request<State>) -> impl Route<State> {
     |ui: &mut egui::Ui, state: &mut State| {
-        background(ui, ui.style().visuals.faint_bg_color, |ui| {
-            ui.heading("Home!");
+        egui::ScrollArea::vertical().show(ui, |ui| {
+            ui.heading("Home");
+            ui.separator();
 
-            ui.label("Navigate to post:");
+            ui.label("Posts:");
 
-            if ui.link("Post 1").clicked() {
-                state.send_message(Message::GoTo("/post/1".to_string()));
-            }
+            link(ui, state, "Post 1", "/post/1");
+            link(ui, state, "Post 2", "/post/2");
 
-            if ui.link("Post 2").clicked() {
-                state.send_message(Message::GoTo("/post/2".to_string()));
-            }
+            ui.label("Wiki:");
 
-            if ui.link("Invalid Post").clicked() {
-                state.send_message(Message::GoTo("/post/".to_string()));
-            }
+            link(ui, state, "Article 1", "/wiki/1");
+            link(ui, state, "Article 2", "/wiki/2");
         });
     }
 }
@@ -43,31 +51,50 @@ fn post(request: Request<State>) -> impl Route<State> {
     let id = request.params.get("id").map(ToOwned::to_owned);
 
     move |ui: &mut egui::Ui, state: &mut State| {
-        background(ui, ui.style().visuals.extreme_bg_color, |ui| {
-            egui::ScrollArea::vertical().show(ui, |ui| {
-                if let Some(id) = &id {
-                    ui.label(format!("Post: {}", id));
+        egui::ScrollArea::vertical().show(ui, |ui| {
+            if let Some(id) = &id {
+                ui.label(format!("Post: {}", id));
 
-                    if ui.button("Back").clicked() {
-                        state.send_message(Message::GoBack);
-                    }
-
-                    ui.label("...");
-                } else {
-                    ui.label("Post not found");
-                    if ui.button("Back").clicked() {
-                        state.send_message(Message::GoBack);
-                    }
+                if ui.button("Back").clicked() {
+                    state.send_message(Message::GoBack).ok();
                 }
-            });
+
+                ui.label("...");
+            } else {
+                ui.label("Post not found");
+                if ui.button("Back").clicked() {
+                    state.send_message(Message::GoBack).ok();
+                }
+            }
         });
     }
 }
 
-fn background(ui: &mut egui::Ui, color: egui::Color32, content: impl FnOnce(&mut egui::Ui)) {
-    egui::Frame::none().fill(color).inner_margin(17.0).show(ui, |ui| {
-        ui.set_width(ui.available_width());
-        ui.set_height(ui.available_height());
-        content(ui);
-    });
+fn wiki(request: Request<State>) -> impl Route<State> {
+    let id = request.params.get("id").map(ToOwned::to_owned);
+
+    move |ui: &mut egui::Ui, state: &mut State| {
+        egui::ScrollArea::vertical().show(ui, |ui| {
+            if let Some(id) = &id {
+                ui.label(format!("Article: {}", id));
+
+                if ui.button("Back").clicked() {
+                    state.send_message(Message::GoBack).ok();
+                }
+
+                ui.label("...");
+            } else {
+                ui.label("Article not found");
+                if ui.button("Back").clicked() {
+                    state.send_message(Message::GoBack).ok();
+                }
+            }
+        });
+    }
+}
+
+fn link(ui: &mut egui::Ui, state: &State, text: &str, to: &str) {
+    if ui.link(text).clicked() {
+        state.send_message(Message::GoTo(to.to_string())).ok();
+    }
 }

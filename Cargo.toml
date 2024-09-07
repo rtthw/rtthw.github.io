@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.86"
 eframe = "0.28.1"
+egui_router = "0.1.2"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen-futures = "0.4.39"

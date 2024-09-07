@@ -66,7 +66,7 @@ impl eframe::App for Website {
         }
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.centered_and_justified(|ui| {
-                ui.heading("Coming Soon...");
+                self.router.ui(ui, &mut self.state)
             });
         });
     }

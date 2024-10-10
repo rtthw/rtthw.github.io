@@ -7,4 +7,4 @@
 
 # rtthw.github.io
 
-The personal website of Matthew Martin.
+My personal website.

@@ -1,5 +1,7 @@
-use eframe::egui;
 
+mod dreg;
+
+use eframe::egui;
 
 
 
@@ -41,6 +43,8 @@ impl eframe::App for Program {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default()
             .frame(egui::Frame::none()
+                .outer_margin(0.0)
+                .inner_margin(0.0)
                 .fill(egui::Color32::from_hex("#1e1f22").unwrap()))
             .show(ctx, |ui| {
                 self.router.ui(ui, &mut self.state);
@@ -50,7 +54,11 @@ impl eframe::App for Program {
 
 impl Program {
     fn new(_cc: &eframe::CreationContext) -> Self {
-        let mut state = State {};
+        let mut state = State {
+            slug: "".to_string(),
+            // TODO: Scale font size on zoom.
+            font_size: 19.0,
+        };
         let router = egui_router::EguiRouter::builder()
             .history({
                 #[cfg(target_arch = "wasm32")]
@@ -63,9 +71,9 @@ impl Program {
             .default_duration(0.3)
             .default_path("/")
             .route("/", home_route)
-            .route("/dreg/{slug}", dreg_route)
+            .route("/dreg", dreg::route)
+            .route("/dreg/{slug}", dreg::route)
             .build(&mut state);
-
 
         Self {
             router,
@@ -76,7 +84,10 @@ impl Program {
 
 
 
-pub struct State {}
+pub struct State {
+    pub slug: String,
+    pub font_size: f32,
+}
 
 
 
@@ -85,32 +96,5 @@ pub fn home_route(_req: egui_router::Request<State>) -> impl egui_router::Route<
         ui.centered_and_justified(|ui| {
             ui.heading("Home");
         });
-    }
-}
-
-pub fn dreg_route(req: egui_router::Request<State>) -> impl egui_router::Route<State> {
-    let slug = req.params.get("slug").unwrap();
-    match slug {
-        "something" => {
-            move |ui: &mut egui::Ui, _state: &mut State| {
-                ui.centered_and_justified(|ui| {
-                    ui.heading("dreg/something");
-                });
-            }
-        }
-        "nothing" => {
-            move |ui: &mut egui::Ui, _state: &mut State| {
-                ui.centered_and_justified(|ui| {
-                    ui.heading("dreg/nothing");
-                });
-            }
-        }
-        _ => {
-            move |ui: &mut egui::Ui, _state: &mut State| {
-                ui.centered_and_justified(|ui| {
-                    ui.heading("dreg");
-                });
-            }
-        }
     }
 }

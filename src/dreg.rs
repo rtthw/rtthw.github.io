@@ -2,6 +2,8 @@
 
 
 
+use std::borrow::Cow;
+
 use crate::*;
 
 
@@ -25,6 +27,13 @@ fn render(ui: &mut egui::Ui, state: &mut State) {
     let cols = (ui.available_width() / cell_width).floor() as u16;
 
     let mut buf = Buffer::new(rows, cols);
+    let main_rect = Rect::new(0, 0, cols, rows);
+
+    // RENDER TEST
+    {
+        Label::new("This is a test...")
+            .render(main_rect, &mut buf);
+    }
 
     let painter = ui.painter();
     for x in 0..cols {
@@ -52,8 +61,9 @@ struct Buffer {
 
 impl Buffer {
     fn new(rows: u16, cols: u16) -> Self {
+        let size = (rows * cols) as usize;
         Self {
-            cells: Vec::with_capacity((rows * cols) as usize),
+            cells: vec![' '; size],
             rows,
             cols,
         }
@@ -65,5 +75,51 @@ impl Buffer {
 
     fn get(&self, i: usize) -> &char {
         &self.cells[i]
+    }
+
+    fn set(&mut self, i: usize, c: char) {
+        self.cells[i] = c;
+    }
+}
+
+
+
+struct Rect {
+    x: u16,
+    y: u16,
+    width: u16,
+    height: u16,
+}
+
+impl Rect {
+    pub fn new(x: u16, y: u16, width: u16, height: u16) -> Self {
+        Self { x, y, width, height, }
+    }
+}
+
+
+
+struct Label<'a> {
+    content: Cow<'a, str>,
+}
+
+impl<'a> Label<'a> {
+    fn new(s: impl Into<Cow<'a, str>>) -> Self {
+        Self {
+            content: s.into(),
+        }
+    }
+
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        if self.content.len() > area.width as usize {
+            // let (line_a, line_b) = self.content.chars()
+            //     .enumerate()
+            //     .partition(|(i, _)| i < &(area.width as usize));
+        } else {
+            for (i, c) in self.content.chars().enumerate() {
+                let index = buf.index_of(area.x + i as u16, area.y);
+                buf.set(index, c);
+            }
+        }
     }
 }

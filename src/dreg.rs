@@ -39,11 +39,13 @@ fn render(ui: &mut egui::Ui, state: &mut State) {
     for x in 0..cols {
         for y in 0..rows {
             let i = buf.index_of(x, y);
+            let c = buf.get(i);
+            if c == &' ' { continue; }; // Minor performance optimization.
             let pos = egui::pos2(x as f32 * cell_width, y as f32 * state.font_size);
             painter.text(
                 pos,
                 egui::Align2::LEFT_TOP,
-                buf.get(i),
+                c,
                 font_id.clone(),
                 egui::Color32::from_gray(91),
             );
@@ -84,6 +86,7 @@ impl Buffer {
 
 
 
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 struct Rect {
     x: u16,
     y: u16,
@@ -92,8 +95,49 @@ struct Rect {
 }
 
 impl Rect {
+    pub const ZERO: Self = Self {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+    };
+
     pub fn new(x: u16, y: u16, width: u16, height: u16) -> Self {
         Self { x, y, width, height, }
+    }
+
+    pub fn with_pos(self, x: u16, y: u16) -> Self {
+        Self {
+            x,
+            y,
+            ..self
+        }
+    }
+
+    pub fn inner_centered(&self, width: u16, height: u16) -> Self {
+        let x = self.x + (self.width.saturating_sub(width) / 2);
+        let y = self.y + (self.height.saturating_sub(height) / 2);
+        Rect::new(x, y, width.min(self.width), height.min(self.height))
+    }
+
+    pub fn hsplit_len(&self, length: u16) -> (Self, Self) {
+        if length >= self.width {
+            return (*self, Rect::ZERO);
+        }
+        (
+            Rect::new(self.x, self.y, length, self.height),
+            Rect::new(self.x + length, self.y, self.width - length, self.height),
+        )
+    }
+
+    pub fn vsplit_len(&self, length: u16) -> (Self, Self) {
+        if length >= self.height {
+            return (*self, Rect::ZERO);
+        }
+        (
+            Rect::new(self.x, self.y, self.width, length),
+            Rect::new(self.x, self.y + length, self.width, self.height - length),
+        )
     }
 }
 
@@ -111,14 +155,19 @@ impl<'a> Label<'a> {
     }
 
     fn render(self, area: Rect, buf: &mut Buffer) {
-        if self.content.len() > area.width as usize {
-            // let (line_a, line_b) = self.content.chars()
-            //     .enumerate()
-            //     .partition(|(i, _)| i < &(area.width as usize));
-        } else {
-            for (i, c) in self.content.chars().enumerate() {
-                let index = buf.index_of(area.x + i as u16, area.y);
-                buf.set(index, c);
+        for (line_index, line) in self.content.lines().enumerate() {
+            if line_index >= area.height as usize {
+                return;
+            }
+            if line.len() > area.width as usize {
+                // let (line_a, line_b) = self.content.chars()
+                //     .enumerate()
+                //     .partition(|(i, _)| i < &(area.width as usize));
+            } else {
+                for (i, c) in line.chars().enumerate() {
+                    let index = buf.index_of(area.x + i as u16, area.y);
+                    buf.set(index, c);
+                }
             }
         }
     }

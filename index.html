@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>rtthw</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+<script type="module" nonce="XoJSDgGLS9HW42VeJ+TIeA==">
+import init, * as bindings from '/rtthw-f74e5b2bf44cb55a.js';
+const wasm = await init('/rtthw-f74e5b2bf44cb55a_bg.wasm');
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+        <base href="/" />
+        <style>
+            html,
+            body {
+                overflow: hidden;
+                margin: 0 !important;
+                padding: 0 !important;
+                height: 100%;
+                width: 100%;
+            }
+
+            canvas {
+                margin-right: auto;
+                margin-left: auto;
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    
+<link rel="modulepreload" href="/rtthw-f74e5b2bf44cb55a.js" crossorigin=anonymous integrity="sha384-R44Z4HykAvU71lTiYJ9+KU/Fq9333Kufc/YyMLUAJVTGriktS3k9nwLDv4YPlPPn">
+<link rel="preload" href="/rtthw-f74e5b2bf44cb55a_bg.wasm" crossorigin=anonymous integrity="sha384-8R5WHGe+l79K3SUvz2zgQeBJED6Vs7lIgS5AIWmP4gGBeKBGjcb2b+hV1Rxrhl2e" as="fetch" type="application/wasm"></head>
+    <body>
+        <canvas id="canvas"></canvas>
+    </body>
+</html>

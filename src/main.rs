@@ -12,7 +12,9 @@ use widgets::*;
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> Result<()> {
-    let program = Website {};
+    let program = Website {
+        hashchange_info: String::new(),
+    };
     let platform = CrosstermPlatform::new()?;
     run_program(program, platform)?;
     Ok(())
@@ -20,7 +22,9 @@ fn main() -> Result<()> {
 
 #[cfg(target_arch = "wasm32")]
 fn main() -> Result<()> {
-    let program = Website {};
+    let program = Website {
+        hashchange_info: String::new(),
+    };
     let platform = WasmPlatform::new();
     run_program(program, platform).unwrap();
     Ok(())
@@ -28,7 +32,9 @@ fn main() -> Result<()> {
 
 
 
-struct Website {}
+struct Website {
+    hashchange_info: String,
+}
 
 impl Program for Website {
     fn update(&mut self, mut frame: Frame) {
@@ -42,6 +48,13 @@ impl Program for Website {
             5,
             Style::new().add_modifier(Modifier::BOLD),
         );
+        frame.buffer.set_stringn(
+            1,
+            1,
+            &self.hashchange_info,
+            frame.area.width.saturating_sub(2) as usize,
+            Style::new().add_modifier(Modifier::DIM),
+        );
     }
 
     fn on_input(&mut self, input: Input) {
@@ -50,13 +63,18 @@ impl Program for Website {
         }
     }
 
-    fn on_platform_request(&self, request: &str) -> Option<&str> {
+    fn on_platform_request(&mut self, request: &str) -> Option<&str> {
         Some(match request {
             "font" => "29px Hack, monospace",
             "font_size" => "29",
             "web::default_fg_style" => "#bcbec4",
             "web::default_bg_style" => "#1e1f22",
-            _ => {
+            req => {
+                if let Some(web_req) = req.strip_prefix("web::") {
+                    if let Some(hashchange) = web_req.strip_prefix("hashchange::") {
+                        self.hashchange_info = hashchange.to_string();
+                    }
+                }
                 return None;
             }
         })

@@ -1,7 +1,12 @@
 
 
 
+mod widgets;
+
+
 use dreg::prelude::*;
+
+use widgets::*;
 
 
 
@@ -26,7 +31,9 @@ fn main() -> Result<()> {
 struct Website {}
 
 impl Program for Website {
-    fn update(&mut self, frame: Frame) {
+    fn update(&mut self, mut frame: Frame) {
+        Corners::new().render(frame.area, &mut frame.buffer);
+
         let label_area = frame.area.inner_centered(5, 1);
         frame.buffer.set_stringn(
             label_area.x,

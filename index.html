@@ -1,21 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Disable zooming: -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <head>
         <title>rtthw</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link data-trunk rel="rust" data-target-name="rtthw" data-bin="rtthw" />
-        <base href="/" />
+        <link data-trunk rel="rust" data-wasm-opt="2" />
+        <link data-trunk rel="copy-file" href="./Hack.ttf" />
+        <base data-trunk-public-url />
         <style>
-            html,
-            body {
-                overflow: hidden;
-                margin: 0 !important;
-                padding: 0 !important;
-                height: 100%;
-                width: 100%;
+            @font-face {
+                font-family: Hack;
+                src: url("Hack.ttf");
             }
-
             canvas {
+                background-color: #1e1f22;
                 margin-right: auto;
                 margin-left: auto;
                 display: block;

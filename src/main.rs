@@ -1,11 +1,13 @@
 
 
 
+mod pages;
 mod widgets;
 
 
 use dreg::prelude::*;
 
+use pages::*;
 use widgets::*;
 
 
@@ -14,21 +16,21 @@ use widgets::*;
 fn main() -> Result<()> {
     CrosstermPlatform::new()?
         .run(Website {
-            hashchange_info: String::new(),
+            page: Page::Home,
         })
 }
 
 #[cfg(target_arch = "wasm32")]
 fn main() -> Result<()> {
     WasmPlatform::new().run(Website {
-        hashchange_info: String::new(),
+        page: Page::Home,
     })
 }
 
 
 
 struct Website {
-    hashchange_info: String,
+    page: Page,
 }
 
 impl Program for Website {
@@ -41,14 +43,7 @@ impl Program for Website {
             label_area.y,
             "rtthw",
             5,
-            Style::new().crossed_out(),
-        );
-        frame.buffer.set_stringn(
-            1,
-            1,
-            &self.hashchange_info,
-            frame.area.width.saturating_sub(2) as usize,
-            Style::new().add_modifier(Modifier::DIM),
+            Style::new().bold(),
         );
     }
 
@@ -68,7 +63,7 @@ impl Program for Website {
             req => {
                 if let Some(web_req) = req.strip_prefix("web::") {
                     if let Some(hashchange) = web_req.strip_prefix("hashchange::") {
-                        self.hashchange_info = hashchange.to_string();
+                        self.page = Page::from_hashchange(hashchange);
                     }
                 }
                 return None;

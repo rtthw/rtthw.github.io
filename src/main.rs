@@ -35,16 +35,7 @@ struct Website {
 
 impl Program for Website {
     fn update(&mut self, mut frame: Frame) {
-        Corners::new().render(frame.area, &mut frame.buffer);
-
-        let label_area = frame.area.inner_centered(5, 1);
-        frame.buffer.set_stringn(
-            label_area.x,
-            label_area.y,
-            "rtthw",
-            5,
-            Style::new().bold(),
-        );
+        self.page.render(frame.area, &mut frame.buffer);
     }
 
     fn on_input(&mut self, input: Input) {

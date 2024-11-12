@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Disable zooming: -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <head>
+        <title>rtthw</title>
+        
+<script type="module" nonce="+T7nU6BEbxxsZDCIUDDS2w==">
+import init, * as bindings from '/rtthw-40d2af91d0404122.js';
+const wasm = await init({ module_or_path: '/rtthw-40d2af91d0404122_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+        
+        <base href="/" />
+        <style>
+            @font-face {
+                font-family: Hack;
+                src: url("Hack.ttf");
+            }
+            canvas {
+                background-color: #1e1f22;
+                margin-right: auto;
+                margin-left: auto;
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    <link rel="modulepreload" href="/rtthw-40d2af91d0404122.js" crossorigin=anonymous integrity="sha384-HVGpglmIlifD3oKCLCpqXOMg+Z3794epaL5GrtVHtrdFd0V5ccahz/EdEUDvltrT"><link rel="preload" href="/rtthw-40d2af91d0404122_bg.wasm" crossorigin=anonymous integrity="sha384-Vzz7QoEpWmiEHl6b1NyhjPffmqL/wiOwXnY6bOW2fs1oDIJTzElnQQZXrBAVjt0j" as="fetch" type="application/wasm"></head>
+    <body>
+        <canvas id="canvas"></canvas>
+    </body>
+</html>

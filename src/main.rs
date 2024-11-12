@@ -8,29 +8,24 @@ use dreg::prelude::*;
 
 use widgets::*;
 
-
+
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> Result<()> {
-    let program = Website {
-        hashchange_info: String::new(),
-    };
-    let platform = CrosstermPlatform::new()?;
-    run_program(program, platform)?;
-    Ok(())
+    CrosstermPlatform::new()?
+        .run(Website {
+            hashchange_info: String::new(),
+        })
 }
 
 #[cfg(target_arch = "wasm32")]
 fn main() -> Result<()> {
-    let program = Website {
+    WasmPlatform::new().run(Website {
         hashchange_info: String::new(),
-    };
-    let platform = WasmPlatform::new();
-    run_program(program, platform).unwrap();
-    Ok(())
+    })
 }
 
-
+
 
 struct Website {
     hashchange_info: String,
@@ -46,7 +41,7 @@ impl Program for Website {
             label_area.y,
             "rtthw",
             5,
-            Style::new().add_modifier(Modifier::BOLD),
+            Style::new().crossed_out(),
         );
         frame.buffer.set_stringn(
             1,
@@ -69,6 +64,7 @@ impl Program for Website {
             "font_size" => "29",
             "web::default_fg_style" => "#bcbec4",
             "web::default_bg_style" => "#1e1f22",
+            "web::default_line_width" => "3.0",
             req => {
                 if let Some(web_req) = req.strip_prefix("web::") {
                     if let Some(hashchange) = web_req.strip_prefix("hashchange::") {

@@ -1,0 +1,71 @@
+@font-face {
+    font-family: JetBrainsMono;
+    src: url(fonts/JetBrainsMono_Regular.ttf);
+}
+
+body {
+    width: 800px;
+    margin: auto;
+    position: relative;
+    background: #1d1d27;
+    color: #a3a3ad;
+    font-family: JetBrainsMono;
+    font-size: 19px;
+    line-height: 23px;
+    margin-top: 17px;
+    margin-bottom: 17px;
+}
+p {
+    margin-bottom: 17px;
+}
+small {
+    font-size: 13px;
+}
+h1 {
+    color: #8b8b95;
+    font-size: 47px;
+    margin-bottom: 37px;
+}
+h2 {
+    color: #8b8b95;
+    font-size: 37px;
+    margin-bottom: 29px;
+}
+h3 {
+    color: #8b8b95;
+    font-size: 29px;
+    margin-bottom: 19px;
+}
+
+a:link {
+    color: #71717f;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #71717f;
+    transition: text-decoration-color 0.2s;
+    text-underline-offset: 2px;
+}
+a:visited {
+    color: #59596d;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #59596d;
+    transition: text-decoration-color 0.2s;
+    text-underline-offset: 2px;
+}
+a:hover {
+    color: #a3a3ad;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #a3a3ad;
+    transition: text-decoration-color 0.2s;
+    text-underline-offset: 2px;
+}
+a:active {
+    color: #71717f;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #71717f;
+    transition: text-decoration-color 0.2s;
+    text-underline-offset: 2px;
+}

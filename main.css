@@ -3,20 +3,69 @@
     src: url(fonts/JetBrainsMono_Regular.ttf);
 }
 
+#sidebar {
+    width: 350px;
+    padding-left: 0;
+    padding-right: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+    z-index: 99;
+    background: #1d1d27;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    #profile {
+        margin-top: 5rem;
+        margin-bottom: 2rem;
+
+        #title {
+            margin: 0.5rem 1.5rem 0.5rem 1.5rem;
+        }
+    }
+
+    ul {
+        width: 100px;
+        margin-top: 5rem;
+        margin-bottom: 2rem;
+
+        li {
+            width: 100%;
+            height: 3rem;
+            font-size: 1rem;
+            font-weight: 400;
+
+            span {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+#main {
+    max-width: 1100px;
+    margin-left: 350px;
+    padding-left: 2rem;
+}
+
 body {
-    width: 800px;
     margin: auto;
     position: relative;
-    background: #1d1d27;
+    background: #2b2b35;
     color: #a3a3ad;
     font-family: JetBrainsMono;
-    font-size: 19px;
-    line-height: 23px;
+    font-size: 1.1rem;
+    line-height: 1.7rem;
     margin-top: 17px;
     margin-bottom: 17px;
+    text-align: left;
 }
 p {
-    margin-bottom: 17px;
+    margin-bottom: 1rem;
 }
 small {
     font-size: 13px;
@@ -24,17 +73,17 @@ small {
 h1 {
     color: #8b8b95;
     font-size: 47px;
-    margin-bottom: 37px;
+    margin-bottom: 1.9rem;
 }
 h2 {
     color: #8b8b95;
     font-size: 37px;
-    margin-bottom: 29px;
+    margin-bottom: 1.7rem;
 }
 h3 {
     color: #8b8b95;
     font-size: 29px;
-    margin-bottom: 19px;
+    margin-bottom: 1.3rem;
 }
 
 a:link {

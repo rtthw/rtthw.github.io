@@ -1,6 +1,14 @@
 @font-face {
+    font-family: Inter;
+    src: url(fonts/Inter-Regular.ttf);
+}
+@font-face {
     font-family: JetBrainsMono;
     src: url(fonts/JetBrainsMono_Regular.ttf);
+}
+@font-face {
+    font-family: NotoEmoji;
+    src: url(fonts/NotoEmoji-Regular.ttf);
 }
 
 #sidebar {
@@ -24,6 +32,7 @@
         margin-bottom: 2rem;
 
         #title {
+            font-family: JetBrainsMono;
             margin: 0.5rem 1.5rem 0.5rem 1.5rem;
         }
     }
@@ -44,6 +53,16 @@
             }
         }
     }
+
+    #links {
+        font-family: NotoColorEmoji;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: auto;
+        margin-bottom: 2.3rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 #main {
@@ -57,7 +76,7 @@ body {
     position: relative;
     background: #2b2b35;
     color: #a3a3ad;
-    font-family: JetBrainsMono;
+    font-family: Inter;
     font-size: 1.1rem;
     line-height: 1.7rem;
     margin-top: 17px;

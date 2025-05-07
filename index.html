@@ -2,11 +2,16 @@
 <html>
     <head>
         <title>Matthew Norman</title>
-        <link rel="icon" type="image/png" href="favicon.png" />
-        <link rel="stylesheet" href="reset.css" />
-        <link rel="stylesheet" href="main.css" />
+        <!-- <link data-trunk rel="icon" type="image/png" href="favicon.png" /> -->
+        <!-- <link rel="stylesheet" href="reset.css" />
+        <link rel="stylesheet" href="main.css" /> -->
+        <link data-trunk rel="css" href="reset.css" />
+        <link data-trunk rel="css" href="main.css" />
+        <base data-trunk-public-url />
     </head>
     <body>
+        <link data-trunk rel="rust" href="Cargo.toml" data-wasm-opt="z" data-bin="website" />
+
         <div id="sidebar">
             <div id="profile">
                 <h3 id="title">Matthew Norman</h3>

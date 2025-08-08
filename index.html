@@ -3,51 +3,47 @@
     <head>
         <title>Matthew Norman</title>
         <link rel="icon" type="image/png" href="favicon.png" />
-        <link rel="stylesheet" href="reset.css" />
         <link rel="stylesheet" href="main.css" />
     </head>
     <body>
-        <div id="sidebar">
-            <div id="profile">
-                <h3 id="title">Matthew Norman</h3>
-            </div>
-            <ul>
-                <li>
-                    <a href="/"><span>HOME</span> </a>
-                </li>
-                <li>
-                    <a href="/about.html"><span>ABOUT</span> </a>
-                </li>
-            </ul>
-            <div id="links">
-                <a href="https://github.com/rtthw">GitHub</a>
-            </div>
-        </div>
-        <div id="main">
-            <p>Hello,</p>
-            <br />
-            <p>
-                I'm Matthew Norman, a
-                <a href="https://en.wikipedia.org/wiki/Systems_programming">systems programmer</a>
-                from Florida. This is my website.
-            </p>
-            <p>Here, you'll mostly find links to things I update more regularly than this site.</p>
-            <p>
-                <a href="/about.html">Click here if you're interested in learning more about me.</a>
-            </p>
-            <br />
-            <h2>Projects</h2>
-            <ul>
-                <li>
-                    <a href="https://github.com/rtthw/bog">Bog</a>, a software development kit for
-                    Rust with a heavy focus on modularity.
-                </li>
-                <li>
-                    <a href="https://github.com/rtthw/dreg">Dreg</a>, a simple, text-based UI
-                    library.
-                </li>
-            </ul>
-            <br />
+        <div class="layout">
+            <header class="header layout__header">
+                <div class="header__content">
+                    <div class="header__left-block">
+                        <a class="header__logo header-menu__link" href="/"
+                            ><span>Matthew Norman</span></a
+                        >
+                    </div>
+                    <nav class="header-menu" role="navigation">
+                        <div class="header-menu__content">
+                            <ul class="header-menu__menu">
+                                <li class="header-menu__entry">
+                                    <a class="header-menu__link" href="/about.html"
+                                        ><span>About</span></a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+            <main>
+                <div class="container">
+                    <div class="content">
+                        <p>TODO: Write introduction.</p>
+                        <h2 id="links">Links</h2>
+                        <p>Links to various things.</p>
+                        <ul>
+                            <li>
+                                <a href="https://github.com/rtthw">GitHub/rtthw</a> &mdash; My
+                                personal GitHub account.
+                            </li>
+                        </ul>
+                        <br />
+                        <small>&copy 2025 Matthew Norman</small>
+                    </div>
+                </div>
+            </main>
         </div>
     </body>
 </html>

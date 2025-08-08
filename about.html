@@ -3,28 +3,35 @@
     <head>
         <title>Matthew Norman</title>
         <link rel="icon" type="image/png" href="favicon.png" />
-        <link rel="stylesheet" href="reset.css" />
         <link rel="stylesheet" href="main.css" />
     </head>
     <body>
-        <div id="sidebar">
-            <div id="profile">
-                <h3 id="title">Matthew Norman</h3>
-            </div>
-            <ul>
-                <li>
-                    <a href="/"><span>HOME</span> </a>
-                </li>
-                <li>
-                    <a href="/about.html"><span>ABOUT</span> </a>
-                </li>
-            </ul>
-            <div id="links">
-                <a href="https://github.com/rtthw">GitHub</a>
-            </div>
-        </div>
-        <div id="main">
-            <h2>About Me</h2>
+        <div class="layout">
+            <header class="header layout__header">
+                <div class="header__content">
+                    <div class="header__left-block">
+                        <a class="header__logo header-menu__link" href="/"
+                            ><span>Matthew Norman</span></a
+                        >
+                    </div>
+                    <nav class="header-menu" role="navigation">
+                        <div class="header-menu__content">
+                            <ul class="header-menu__menu">
+                                <li class="header-menu__entry">
+                                    <a class="header-menu__link" href="/about.html"
+                                        ><span>About</span></a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+            <main>
+                <div class="container">
+                    <h2>About Me</h2>
+                </div>
+            </main>
         </div>
     </body>
 </html>
